@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 24px;
+      color: #333;
+    }
+    .flight-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: #fefefe;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+    }
+    .flight-details {
+      flex: 2;
+    }
+    .flight-details p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #555;
+    }
+    .flight-logo {
+      max-height: 40px;
+      flex: 1;
+      text-align: center;
+    }
+    .flight-logo img {
+      max-height: 30px;
+    }
+    .flight-price {
+      flex: 1;
+      text-align: right;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c974b;
+    }
+    .flight-direct {
+      color: #007BFF;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .flight-changes {
+      color: #FF9900;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #888;
+    }
+    .footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Top 5 Cheapest Flights</h1>
+      <p>Cheapest Flight: <strong>${{ cheapest_price }}</strong></p>
+    </div>
+
+    {% for flight in flights %}
+    <div class="flight-card">
+      <div class="flight-logo">
+        <img src="{{ flight.logo_url }}" alt="{{ flight.airline_name }} logo">
+      </div>
+      <div class="flight-details">
+        <p><strong>{{ flight.origin_code }} → {{ flight.destination_code }}</strong></p>
+        <p>Departure: {{ flight.departure_time }}</p>
+        <p>Arrival: {{ flight.arrival_time }}</p>
+        <p>Airline: {{ flight.airline_name }}</p>
+        <p><strong>Flight Code:</strong> {{ flight.connections[0].flight_code if flight.connections }}</p>
+        {% if flight.num_connections == 0 %}
+        <p class="flight-direct">Direct</p>
+        {% else %}
+        <p class="flight-changes">Number of Changes: {{ flight.num_connections }}</p>
+        {% for connection in flight.connections %}
+        <p>
+            {{ connection.origin }} → {{ connection.destination }}: 
+            {{ connection.departure }} - {{ connection.arrival }} | 
+            {{ connection.carrier }} | Flight Code: {{ connection.flight_code or "N/A" }}
+        </p>
+        {% endfor %}
+        {% endif %}
+      </div>
+      <div class="flight-price">
+        ${{ flight.price }}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="footer">
+      <p><a href="{{ action_url }}">View More Details</a> | <a href="{{ unsubscribe_url }}">Unsubscribe</a></p>
+    </div>
+  </div>
+</body>
+</html>

@@ -12,4 +12,3 @@ def fetch_flight_data(access_token, offer_request):
         json={"data": offer_request}
     )
     return response.json()
-        
